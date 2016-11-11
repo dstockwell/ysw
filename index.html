@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<script src="/node_modules/pako/dist/pako.js"></script>
+<script>
+fetch('https://registry.yarnpkg.com/pako/-/pako-1.0.3.tgz').then(result => result.arrayBuffer()).then(buf => {
+  var result = pako.inflate(buf);
+  console.log(window.tar = new Tar(result));
+});
+
+class Tar {
+  constructor(buffer) {
+    this.buffer = buffer;
+  }
+  get name() {
+    return new TextDecoder('utf8').decode(this.buffer.slice(0, 100));
+  }
+  get size() {
+    return parseInt(new TextDecoder('ascii').decode(this.buffer.slice(124, 124 + 12)), 8);
+  }
+  get raw() {
+    return this.buffer.slice(512, 512 + this.size);
+  }
+  get text() {
+    return new TextDecoder('utf8').decode(this.raw);
+  }
+  get next() {
+  }
+}
+
+</script>
